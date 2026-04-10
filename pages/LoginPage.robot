@@ -32,6 +32,12 @@ LoginPage.I click login button
 
 LoginPage.I should see successful login
     Wait Until Page Contains Element    ${SUCCESS_INDICATOR}    10s
+    ${success}=    Get Text    ${SUCCESS_INDICATOR}
+    Log    Success indicator text: ${success}
+    Log To Console    Success indicator text: ${success}
 
 LoginPage.I should see login failure
-    Wait Until Page Contains Element    ${ERROR_MESSAGE}    10s
+    Wait Until Page Contains Element    ${ERROR_MESSAGE}    5s
+    ${error}=    Get Text    ${ERROR_MESSAGE}
+    Log    Login error message: ${error}
+    Log To Console    Login error message: ${error}
