@@ -19,6 +19,7 @@ LoginPage.Open Login Page
     Click Element    ${USER_MENU}
     Wait Until Element Is Visible    ${USERNAME_FIELD}    10s
 LoginPage.EmptyFields
+    Wait Until Page Contains Element    ${Article_Table}    20s
     Wait Until Page Contains Element    ${USER_MENU}    10s
     Click Element    ${USER_MENU}
     Wait Until Element Is Visible    ${USERNAME_FIELD}    10s
