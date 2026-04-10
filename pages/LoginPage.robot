@@ -5,6 +5,8 @@ Library    SeleniumLibrary
 ${USER_MENU}    //*[@id='menuUser']
 ${USERNAME_FIELD}    //input[@name='username']
 ${PASSWORD_FIELD}    //input[@name='password']
+${fIELD_REQUIRED}    //label[@class='invalid']
+${closeBtnloginPopUpCloseBtn}    //div[@class='closeBtn loginPopUpCloseBtn']
 ${Article_Table}    //article[@id='our_products']
 ${LOGIN_BUTTON}    //button[@id='sign_in_btn']
 ${SUCCESS_INDICATOR}    //span[@class='hi-user containMiniTitle ng-binding']  # Exemple : nom d'utilisateur affiché après connexion
@@ -15,7 +17,15 @@ LoginPage.Open Login Page
     Wait Until Page Contains Element    ${Article_Table}    20s
     Wait Until Page Contains Element    ${USER_MENU}    10s
     Click Element    ${USER_MENU}
-    Wait Until Element Is Visible    ${USERNAME_FIELD}    10s 
+    Wait Until Element Is Visible    ${USERNAME_FIELD}    10s
+LoginPage.EmptyFields
+    Wait Until Page Contains Element    ${USER_MENU}    10s
+    Click Element    ${USER_MENU}
+    Wait Until Element Is Visible    ${USERNAME_FIELD}    10s
+    Wait Until Page Contains Element    ${PASSWORD_FIELD}    10s
+    Clear Element Text    ${USERNAME_FIELD}
+    Clear Element Text    ${PASSWORD_FIELD}
+
 LoginPage.I enter username
     [Arguments]    ${username}
     Wait Until Page Contains Element    ${USERNAME_FIELD}    10s
@@ -41,3 +51,9 @@ LoginPage.I should see login failure
     ${error}=    Get Text    ${ERROR_MESSAGE}
     Log    Login error message: ${error}
     Log To Console    Login error message: ${error}
+    Click Element    ${closeBtnloginPopUpCloseBtn}  # Fermer le pop-up d'erreur
+LoginPage.I should see Field Required
+    Wait Until Page Contains Element    ${fIELD_REQUIRED}    5s
+    ${error}=    Get Text    ${fIELD_REQUIRED}
+    Log    Field required message: ${error}
+    Log To Console    Field required message: ${error}
