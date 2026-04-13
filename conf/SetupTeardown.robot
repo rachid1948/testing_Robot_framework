@@ -36,5 +36,10 @@ Setup Test
     Log    Début du test
 
 Teardown Test
-    Run Keyword If Test Failed    Capture Error Screen    selenium-failed-fullscreen.png
+
+    Teardown Avec Screenshot
     Log    Fin du test
+
+    #Run Keyword If Test Failed    Capture Error Screen    selenium-failed-fullscreen.png
+    
+
