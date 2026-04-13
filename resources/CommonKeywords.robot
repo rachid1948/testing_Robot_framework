@@ -2,6 +2,7 @@
 Library    SeleniumLibrary
 Library    OperatingSystem
 Library    Collections
+Library    String
 
 
 *** Keywords ***
@@ -27,7 +28,7 @@ Read Login Credentials From TXT
         ${cred}=    Create Dictionary    username=${username}    password=${password}
         Append To List    ${credentials}    ${cred}
     END
-    [Return]    ${credentials}
+    RETURN   ${credentials}
 
 Read Login Credentials From CSV
     [Arguments]    ${csv_file}
@@ -46,7 +47,7 @@ Read Login Credentials From CSV
         ${cred}=    Create Dictionary    username=${username}    password=${password}
         Append To List    ${credentials}    ${cred}
     END
-    [Return]    ${credentials}
+    RETURN   ${credentials}
 
 Read Login Credentials
     [Arguments]    ${file_path}
@@ -62,4 +63,34 @@ Read Login Credentials
     ELSE
         Fail    Unsupported login file extension: ${ext}. Use .txt or .csv
     END
-    [Return]    ${credentials}
+    RETURN   ${credentials}
+
+Read Signup Data
+    [Arguments]    ${csv_file}    ${line_index}=1
+    ${content}=    Get File          ${csv_file}
+    @{lines}=      Split To Lines    ${content}
+    @{parts}=      Split String      ${lines}[${line_index}]    ,
+    ${data}=       Create Dictionary
+    ...    username=${parts}[0]
+    ...    email=${parts}[1]
+    ...    password=${parts}[2]
+    ...    confirm=${parts}[3]
+    RETURN    ${data}
+
+Increment Username
+    [Arguments]    ${username}
+    ${new_username}=    Evaluate    (lambda u: (__import__('re').sub(r'(\\d+)$', lambda m: str(int(m.group(1)) + 1), u) if __import__('re').search(r'\\d+$', u) else u + '1'))('''${username}''')
+    RETURN    ${new_username}
+
+Increment Username In Signup CSV
+    [Arguments]    ${csv_file}    ${line_index}=1
+    ${content}=    Get File          ${csv_file}
+    @{lines}=      Split To Lines    ${content}
+    @{parts}=      Split String      ${lines}[${line_index}]    ,
+    ${new_username}=    Increment Username    ${parts}[0]
+    ${updated_line}=    Catenate    SEPARATOR=,    ${new_username}    ${parts}[1]    ${parts}[2]    ${parts}[3]
+    ${lines_copy}=    Create List    @{lines}
+    Set List Value    ${lines_copy}    ${line_index}    ${updated_line}
+    ${new_content}=    Catenate    SEPARATOR=\n    @{lines_copy}
+    Create File    ${csv_file}    ${new_content}
+    RETURN    ${new_username}

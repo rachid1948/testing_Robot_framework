@@ -7,9 +7,27 @@ Resource   ImportRessource.robot
 
 Open Browser And Login
     ${ROOT}=    Normalize Path    ${CURDIR}/..
-    Set Screenshot Directory    ${ROOT}/erreurs
+    Create Directory    ${ROOT}/results/screenshots
+    Create Directory    ${ROOT}/erreurs
+    Set Screenshot Directory    ${ROOT}/results/screenshots
     Open Browser   ${URL}    ${BROWSER}
-    Maximize Browser Window
+    Set Window Position    0    0
+    Set Window Size    1920    1080
+
+Capture Full Screen
+    [Arguments]    ${file_name}
+    Execute Javascript    window.scrollTo(0, 0)
+    Set Window Position    0    0
+    Set Window Size    1920    1080
+    ${ROOT}=    Normalize Path    ${CURDIR}/..
+    Set Screenshot Directory    ${ROOT}/results/screenshots
+    Capture Page Screenshot    ${file_name}
+
+Capture Error Screen
+    [Arguments]    ${file_name}
+    ${ROOT}=    Normalize Path    ${CURDIR}/..
+    Set Screenshot Directory    ${ROOT}/erreurs
+    Capture Page Screenshot    ${file_name}
     
 Close Application
     Close All Browsers
@@ -18,5 +36,5 @@ Setup Test
     Log    Début du test
 
 Teardown Test
-    Run Keyword If Test Failed    Capture Page Screenshot
+    Run Keyword If Test Failed    Capture Error Screen    selenium-failed-fullscreen.png
     Log    Fin du test
