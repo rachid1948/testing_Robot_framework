@@ -18,5 +18,5 @@ Setup Test
     Log    Début du test
 
 Teardown Test
-    Run Keyword If Test Failed    Capture Page Screenshot
+    Teardown Avec Screenshot
     Log    Fin du test
